@@ -1,0 +1,73 @@
+Description: Creating IAM Users with cloudformation
+
+Parameters:
+  Mypass:
+    Type: String 
+
+Resources:
+  IAMUser:
+    Type: AWS::IAM::User
+    Properties: 
+      UserName: !Join ["-", [ !Ref "AWS::Region", "PManager"]] 
+      LoginProfile:
+        Password: !Ref Mypass
+      Groups:
+        - !Sub '${IAMGroup}'
+    DependsOn: IAMGroup
+  IAMGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: !Join ["-", [ !Ref "AWS::Region", "Managers"]]
+      Policies:  
+        - PolicyName: AdminAccess
+          PolicyDocument:
+            Statement: 
+                Effect: Allow
+                Action: "*"
+                Resource: "*"
+                    
+
+Resources:
+  IAMUser:
+    Type: AWS::IAM::User
+    Properties: 
+      UserName: !Join ["-", [ !Ref "AWS::Region", "Devoloper"]] 
+      LoginProfile:
+        Password: !Ref Mypass
+      Groups:
+        - !Sub '${IAMGroup}'
+    DependsOn: IAMGroup
+  IAMGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: !Join ["-", [ !Ref "AWS::Region", "Developers"]]
+      Policies:  
+        - PolicyName: Developers
+          PolicyDocument:
+            Statement: 
+                Effect: Allow
+                Action: "ec2:"
+                Resource: "*"
+
+Resources:
+  IAMUser:
+    Type: AWS::IAM::User
+    Properties: 
+      UserName: !Join ["-", [ !Ref "AWS::Region", "Intern"]] 
+      LoginProfile:
+        Password: !Ref Mypass
+      Groups:
+        - !Sub '${IAMGroup}'
+    DependsOn: IAMGroup
+  IAMGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: !Join ["-", [ !Ref "AWS::Region", "Trainees"]]
+      Policies:  
+        - PolicyName: AdminAccess
+          PolicyDocument:
+            Statement: 
+                Effect: Allow
+                Action: s3:List*
+                Resource: "*"
+
